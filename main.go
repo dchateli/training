@@ -20,7 +20,7 @@ var (
 func main() {
 	// COUCOU
 	myDb = filesystem.InMemoryDb{}
-
+	// modif
 	router := mux.NewRouter()
 	router.HandleFunc("/users", listUsers).Methods(http.MethodGet)
 	router.HandleFunc("/users", createUser).Methods(http.MethodPost)
