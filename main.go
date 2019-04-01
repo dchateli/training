@@ -18,6 +18,7 @@ var (
 )
 
 func main() {
+	// COUCOU
 	myDb = filesystem.InMemoryDb{}
 
 	router := mux.NewRouter()
