@@ -1,9 +1,9 @@
-package main
+package training
 
 import (
 
-	"david/davidDb"
-	"david/davidDb/filesystem"
+	"davidDb"
+	"davidDb/filesystem"
 
 	"encoding/json"
 	"fmt"
