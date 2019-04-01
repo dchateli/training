@@ -1,9 +1,8 @@
-package training
+package main
 
 import (
-
-	"davidDb"
-	"davidDb/filesystem"
+	"github.com/dchateli/training/davidDb"
+	"github.com/dchateli/training/davidDb/filesystem"
 
 	"encoding/json"
 	"fmt"
@@ -19,7 +18,7 @@ var (
 
 func main() {
 	// COUCOU
-	myDb = filesystem.InMemoryDb{}
+	myDb = &filesystem.InMemoryDb{}
 	// modif
 	router := mux.NewRouter()
 	router.HandleFunc("/users", listUsers).Methods(http.MethodGet)
@@ -34,28 +33,25 @@ func main() {
 
 }
 
-func listUsers(w http.ResponseWriter, r *http.Request ) {
+func listUsers(w http.ResponseWriter, r *http.Request) {
 
-	listeUser, err := myDb.ListUser()
-	if err != nil{
+	listUser, err := myDb.ListUser()
+	if err != nil {
 		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	pagesJson, _ := json.MarshalIndent(listeUser, "", "\t")
+	pagesJson, _ := json.MarshalIndent(listUser, "", "\t")
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(pagesJson)
 	if err != nil {
 		fmt.Println(err.Error())
-
 	}
 }
 
-func createUser(w http.ResponseWriter , r *http.Request){
+func createUser(w http.ResponseWriter, r *http.Request) {
 	var newUser db.User
-
-
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -77,14 +73,14 @@ func createUser(w http.ResponseWriter , r *http.Request){
 		w.WriteHeader(http.StatusInternalServerError)
 
 		_, e := w.Write([]byte(err.Error())) //cast
-		if e!= nil {
+		if e != nil {
 			fmt.Println(err)
 		}
 
 		return
 	}
 
-	listByte, err:= json.MarshalIndent(newUser, "", "\t")
+	listByte, err := json.MarshalIndent(newUser, "", "\t")
 	if err != nil {
 		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusExpectationFailed)
@@ -95,40 +91,39 @@ func createUser(w http.ResponseWriter , r *http.Request){
 	_, err = w.Write(listByte)
 }
 
-
-func UserExist(userId string )(bool,db.User,int){
+/*func UserExist(userId string) (bool, db.User, int) {
 
 	for i := range db.UserDB {
-		if 	userId == db.UserDB[i].Id{
-			return true,db.UserDB[i],i
+		if userId == db.UserDB[i].Id {
+			return true, db.UserDB[i], i
 		}
 
 	}
-	return false,db.User{},-1
-}
+	return false, db.User{}, -1
+}*/
 
-func getUser(w http.ResponseWriter , r *http.Request){
+func getUser(w http.ResponseWriter, r *http.Request) {
 	requestVars := mux.Vars(r)
 	userId := requestVars["id"]
 
-	isExist,myUser,_ := UserExist(userId)
+
+	newUser, err := myDb.GetUser(userId)
+
+	/*isExist, myUser, _ := UserExist(userId)
 	if !isExist {
 		w.WriteHeader(http.StatusNotFound)
 		return
-	}
+	}*/
 
-
-
-	b, err:= json.MarshalIndent(myUser, "", "\t")
+	b, err := json.MarshalIndent(newUser, "", "\t")
 	if err != nil {
 		// handle error
 		fmt.Println(err)
-
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	_ ,err= w.Write(b)
+	_, err = w.Write(b)
 	if err != nil {
 		// handle error
 		fmt.Println(err)
@@ -136,36 +131,34 @@ func getUser(w http.ResponseWriter , r *http.Request){
 	}
 }
 
-func deleteUser(w http.ResponseWriter , r *http.Request){
+func deleteUser(w http.ResponseWriter, r *http.Request) {
 	requestVars := mux.Vars(r)
 	userId := requestVars["id"]
 
-	isExist,_,userListNb := UserExist(userId)
+	/*isExist, _, userListNb := UserExist(userId)
 	if !isExist {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	db.UserDB = append( db.UserDB[:userListNb], db.UserDB[userListNb+1:]...)
+	db.UserDB = append(db.UserDB[:userListNb], db.UserDB[userListNb+1:]...)
+	*/
+	err := myDb.DeleteUser(userId)
+	if err != nil{
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 
 	w.WriteHeader(http.StatusNoContent)
 
 	return
 }
 
-func updateUser(w http.ResponseWriter , r *http.Request){
+func updateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser db.User
-
 
 	requestVars := mux.Vars(r)
 	userId := requestVars["id"]
-
-	isExist,myUser,userListNb := UserExist(userId)
-	if !isExist {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -180,32 +173,20 @@ func updateUser(w http.ResponseWriter , r *http.Request){
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	if newUser.Id != ""{
-		w.WriteHeader(http.StatusBadRequest)
+	UpdatedUser,err:= myDb.UpdateUser(userId, newUser )
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if newUser.Name != ""{
-		myUser.Name = newUser.Name
-	}
-
-	if newUser.Description != ""{
-		myUser.Description = newUser.Description
-	}
-
-
-	db.UserDB[userListNb] = myUser
-
-
-	listByte, err:= json.MarshalIndent(db.UserDB, "", "\t")
+	listByte, err := json.MarshalIndent(UpdatedUser, "", "\t")
 	if err != nil {
 		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusExpectationFailed)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(listByte)
 
 }
