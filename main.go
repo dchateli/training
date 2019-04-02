@@ -1,11 +1,16 @@
 package main
 
-import (
-	"github.com/dchateli/training/davidDb"
-	"github.com/dchateli/training/davidDb/filesystem"
 
+
+
+import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/dchateli/training/davidDb"
+	"github.com/dchateli/training/davidDb/filesystem"
+	"github.com/dchateli/training/davidDb/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
@@ -13,12 +18,30 @@ import (
 )
 
 var (
-	myDb db.DbContract
+	myDb       db.DbContract
+	mysqlDbCon *sql.DB
 )
+func init(){
+	var err error
+	mysqlDbCon, err = sql.Open("mysql", "root:Bonzig1243@/test")
+	if err != nil {
+		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
+	}
+
+	// Open doesn't open a connection. Validate DSN data:
+	err = mysqlDbCon.Ping()
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+
+	myDb = &filesystem.InMemoryDb{}
+	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
+}
 
 func main() {
-	// COUCOU
-	myDb = &filesystem.InMemoryDb{}
+	defer mysqlDbCon.Close()
+
+
 	// modif
 	router := mux.NewRouter()
 	router.HandleFunc("/users", listUsers).Methods(http.MethodGet)
@@ -27,14 +50,17 @@ func main() {
 	router.HandleFunc("/users/{id}", deleteUser).Methods(http.MethodDelete)
 	router.HandleFunc("/users/{id}", updateUser).Methods(http.MethodPatch)
 
+
 	if err := http.ListenAndServe("0.0.0.0:8888", router); err != nil {
 		log.Fatal(err.Error())
 	}
+
 
 }
 
 func listUsers(w http.ResponseWriter, r *http.Request) {
 
+	
 	listUser, err := myDb.ListUser()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -91,16 +117,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(listByte)
 }
 
-/*func UserExist(userId string) (bool, db.User, int) {
 
-	for i := range db.UserDB {
-		if userId == db.UserDB[i].Id {
-			return true, db.UserDB[i], i
-		}
-
-	}
-	return false, db.User{}, -1
-}*/
 
 func getUser(w http.ResponseWriter, r *http.Request) {
 	requestVars := mux.Vars(r)
@@ -109,11 +126,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 	newUser, err := myDb.GetUser(userId)
 
-	/*isExist, myUser, _ := UserExist(userId)
-	if !isExist {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}*/
+
 
 	b, err := json.MarshalIndent(newUser, "", "\t")
 	if err != nil {

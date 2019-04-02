@@ -84,5 +84,17 @@ func (d *InMemoryDb) ListUser()([]db.User, error){
 	return d.userDB,nil
 }
 
+func (d *InMemoryDb) DoubleUser(u db.User) (db.User,db.User, error) {
+	storage, err := uuid.NewV4()
+	fmt.Println(d.userDB)
+
+	if err != nil {
+		return db.User{}, db.User{}, err
+	}
+	u.Id = storage.String()
+
+	d.userDB = append(d.userDB, u)
+	return u,u, nil
+}
 
 // Implementer les 3 autres méthodes du contrat
