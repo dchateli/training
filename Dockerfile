@@ -1,4 +1,4 @@
 FROM golang
-RUN mkdir /training
-ADD . /training
-RUN cd /training && go build main.go
+RUN mkdir -p /usr/local/go/src/github.com/dchateli/training
+ADD . /usr/local/go/src/github.com/dchateli/training
+RUN cd /usr/local/go/src/github.com/dchateli/training && go build main.go
