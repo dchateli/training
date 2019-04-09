@@ -15,13 +15,14 @@ type MysqlDb struct {
 
 func (m *MysqlDb) AddUser(u db.User) (db.User, error) {
 
+	// m.con  connection a la base de donnée
 	repId, err := m.Con.Exec(`INSERT INTO users(name,description) VALUES( ?, ? )`, u.Name, u.Description)
 	if err != nil {
 		return db.User{}, errors.Wrap(err, "failed to insert new user")
 	}
 
 	var id int64
-	id,err = repId.LastInsertId()
+	id,err = repId.LastInsertId() // dernier ajout
 	if err != nil {
 		return db.User{}, err
 	}

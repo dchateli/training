@@ -1,15 +1,11 @@
 package main
 
-
-
-
 import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/dchateli/training/davidDb"
-	"github.com/dchateli/training/davidDb/filesystem"
-	"github.com/dchateli/training/davidDb/mysql"
+	"github.com/dchateli/training/davidDb/inmemory"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -34,8 +30,8 @@ func init(){
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-	myDb = &filesystem.InMemoryDb{}
-	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
+	myDb = &inmemory.InMemoryDb{}
+	//myDb = &mysql.MysqlDb{Con: mysqlDbCon}
 }
 
 func main() {
