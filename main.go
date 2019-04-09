@@ -19,17 +19,7 @@ var (
 	mysqlDbCon *sql.DB
 )
 func init(){
-	var err error
-	mysqlDbCon, err = sql.Open("mysql", "root:Bonzig1243@/test")
-	if err != nil {
-		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
-	}
 
-	// Open doesn't open a connection. Validate DSN data:
-	err = mysqlDbCon.Ping()
-	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
-	}
 
 	myDb = &inmemory.InMemoryDb{}
 	//myDb = &mysql.MysqlDb{Con: mysqlDbCon}
