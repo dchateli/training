@@ -25,10 +25,8 @@ func (d *InMemoryDb) verification(user string) (bool, db.User, int) {
 }
 
 func (d *InMemoryDb) AddUser(u db.User) (db.User, error) {
-	storage, err := uuid.NewV4()
-	if err != nil {
-		return db.User{}, err
-	}
+	storage := uuid.NewV4()
+
 	u.Id = storage.String()
 
 	d.UserDB = append(d.UserDB, u)

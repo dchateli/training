@@ -1,20 +1,17 @@
 package main
 
-
-
-
 import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/dchateli/training/davidDb"
-	"github.com/dchateli/training/davidDb/filesystem"
-	"github.com/dchateli/training/davidDb/mysql"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/dchateli/training/davidDb"
+	"github.com/dchateli/training/davidDb/inmemory"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -22,20 +19,10 @@ var (
 	mysqlDbCon *sql.DB
 )
 func init(){
-	var err error
-	mysqlDbCon, err = sql.Open("mysql", "root:Bonzig1243@/test")
-	if err != nil {
-		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
-	}
 
-	// Open doesn't open a connection. Validate DSN data:
-	err = mysqlDbCon.Ping()
-	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
-	}
 
-	myDb = &filesystem.InMemoryDb{}
-	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
+	myDb = &inmemory.InMemoryDb{}
+	//myDb = &mysql.MysqlDb{Con: mysqlDbCon}
 }
 
 func main() {
