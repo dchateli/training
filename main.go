@@ -4,13 +4,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+
 	"github.com/dchateli/training/davidDb"
 	"github.com/dchateli/training/davidDb/inmemory"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	"io/ioutil"
-	"log"
-	"net/http"
 )
 
 var (
