@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monimage
+  labels:
+    app: nomApp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nomApp
+  template:
+    metadata:
+      labels:
+        app: nomApp
+    spec:
+      containers:
+        - name: moncontener
+          image: eu.gcr.io/training-237112/monimage:latest
+          ports:
+            - containerPort: 8888
+

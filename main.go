@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -16,7 +15,7 @@ import (
 
 var (
 	myDb       db.DbContract
-	mysqlDbCon *sql.DB
+
 )
 func init(){
 
@@ -26,7 +25,7 @@ func init(){
 }
 
 func main() {
-	defer mysqlDbCon.Close()
+
 
 
 	// modif
@@ -36,7 +35,6 @@ func main() {
 	router.HandleFunc("/users/{id}", getUser).Methods(http.MethodGet)
 	router.HandleFunc("/users/{id}", deleteUser).Methods(http.MethodDelete)
 	router.HandleFunc("/users/{id}", updateUser).Methods(http.MethodPatch)
-
 
 	if err := http.ListenAndServe("0.0.0.0:8888", router); err != nil {
 		log.Fatal(err.Error())
@@ -110,10 +108,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	requestVars := mux.Vars(r)
 	userId := requestVars["id"]
 
-
 	newUser, err := myDb.GetUser(userId)
-
-
 
 	b, err := json.MarshalIndent(newUser, "", "\t")
 	if err != nil {
