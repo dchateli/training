@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: moncontener
-          image: eu.gcr.io/my-project-test-237309/main:v1
+          image: gcr.io/my-project-test-237309/main:v1
           ports:
             - containerPort: 8888
 
