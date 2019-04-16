@@ -10,7 +10,7 @@ spec:
       port: 8888
       targetPort: 443
       clusterIP: 10.27.240.1
-      loadBalancerIP: 78.11.24.19
+      loadBalancerIP:
         type: LoadBalancer
       status:
         loadBalancer:
