@@ -6,7 +6,7 @@
   },
   "spec": {
     "ports": [{
-                "port": 8888,
+                "port": 8080,
                 "targetPort": 8888
               }],
     "selector": {
