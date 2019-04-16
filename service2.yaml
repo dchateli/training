@@ -6,11 +6,11 @@
   },
   "spec": {
     "ports": [{
-                "port": 8765,
+                "port": 8888,
                 "targetPort": 9376
               }],
     "selector": {
-      "app": "example"
+      "app": "nomApp"
     },
     "type": "LoadBalancer"
   }
