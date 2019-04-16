@@ -5,4 +5,4 @@ metadata:
 spec:
   backend:
     serviceName: my-service
-    servicePort: 8
+    servicePort: 8888
