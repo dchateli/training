@@ -9,3 +9,10 @@ spec:
     - protocol: TCP
       port: 8888
       targetPort: 443
+      clusterIP: 10.27.240.1
+      loadBalancerIP: 78.11.24.19
+        type: LoadBalancer
+      status:
+        loadBalancer:
+          ingress:
+            - ip: 146.148.47.155
