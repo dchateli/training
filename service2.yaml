@@ -7,7 +7,7 @@
   "spec": {
     "ports": [{
                 "port": 8888,
-                "targetPort": 9376
+                "targetPort": 8888
               }],
     "selector": {
       "app": "nomApp"
