@@ -13,4 +13,7 @@ spec:
       clusterIP: 10.27.240.1
       loadBalancerIP:
       type: LoadBalancer
-
+      status:
+        loadBalancer:
+          ingress:
+            - ip: 146.148.47.155
