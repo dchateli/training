@@ -4,16 +4,8 @@ metadata:
   name: my-service
 spec:
   selector:
-    app: nomApp
+    app: MyApp
   ports:
-    - name: http
-      protocol: TCP
+    - protocol: TCP
       port: 8888
       targetPort: 443
-      clusterIP: 10.27.240.1
-      loadBalancerIP:
-      type: LoadBalancer
-      status:
-        loadBalancer:
-          ingress:
-            - ip: 146.148.47.155
