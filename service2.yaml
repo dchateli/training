@@ -2,7 +2,7 @@
   "kind": "Service",
   "apiVersion": "v1",
   "metadata": {
-    "name": "example-service"
+    "name": "my-service"
   },
   "spec": {
     "ports": [{
