@@ -2,7 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: test-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
 spec:
-  backend:
-    serviceName: my-service
-    servicePort: 8080
+  rules:
+    - http:
+        paths:
+          - path: /path1
+            backend:
+              serviceName: my-service
+              servicePort: 8080
+          - path: /path2
+            backend:
+              serviceName: my-service
+              servicePort: 8080
