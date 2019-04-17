@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/dchateli/training/davidDb/mysql"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/dchateli/training/davidDb"
-	"github.com/dchateli/training/davidDb/inmemory"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
@@ -21,15 +21,15 @@ var (
 func init(){
 
 
-	myDb = &inmemory.InMemoryDb{}
-	//myDb = &mysql.MysqlDb{Con: mysqlDbCon}
+	//myDb = &inmemory.InMemoryDb{}
+	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
 }
 
 func main() {
 	defer mysqlDbCon.Close()
 
 
-	// modif
+
 	router := mux.NewRouter()
 	router.HandleFunc("/users", listUsers).Methods(http.MethodGet)
 	router.HandleFunc("/users", createUser).Methods(http.MethodPost)

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monimage
+  labels:
+    app: nomApp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nomApp
+  template:
+    metadata:
+      labels:
+        app: nomApp
+    spec:
+      containers:
+        - name: moncontener
+          image: gcr.io/my-project-test-237309/main:v1
+          ports:
+            - containerPort: 8888
+        - name: database
+          image: gcr.io/my-project-test-237309/container:v1
+          ports:
+            - containerPort: 8000
