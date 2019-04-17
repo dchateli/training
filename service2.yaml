@@ -12,6 +12,6 @@
     "selector": {
       "app": "nomApp"
     },
-    "type": "LoadBalancer"
+    "type": "NodePort"
   }
 }
