@@ -14,12 +14,24 @@ spec:
       labels:
         app: nomApp
     spec:
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
       containers:
         - name: moncontener
           image: gcr.io/my-project-test-237309/main:v1
           ports:
             - containerPort: 8888
-        - name: database
-          image: gcr.io/my-project-test-237309/container:v1
-          ports:
-            - containerPort: 8000
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=my-project-test-237309:europe-west1:my-db=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
