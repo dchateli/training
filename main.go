@@ -4,14 +4,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/dchateli/training/davidDb"
 	"github.com/dchateli/training/davidDb/mysql"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/dchateli/training/davidDb"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
+	"os"
 )
 
 var (
@@ -23,6 +23,18 @@ func init(){
 
 	//myDb = &inmemory.InMemoryDb{}
 	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
+
+	var err error
+	mysqlDbCon, err = sql.Open("mysql", os.Getenv("DB_USER")+":"+os.Getenv("DB_PASSWORD")+"@127.0.0.1/my-db")
+	if err != nil {
+		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
+	}
+
+	// Open doesn't open a connection. Validate DSN data:
+	err = mysqlDbCon.Ping()
+		if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
 }
 
 func main() {
@@ -41,7 +53,6 @@ func main() {
 	if err := http.ListenAndServe("0.0.0.0:8888", router); err != nil {
 		log.Fatal(err.Error())
 	}
-
 
 }
 

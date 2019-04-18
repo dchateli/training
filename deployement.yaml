@@ -20,6 +20,17 @@ spec:
             secretName: cloudsql-instance-credentials
       containers:
         - name: moncontener
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
           image: gcr.io/my-project-test-237309/main:v1
           ports:
             - containerPort: 8888
