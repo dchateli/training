@@ -24,8 +24,9 @@ func init(){
 	//myDb = &inmemory.InMemoryDb{}
 	myDb = &mysql.MysqlDb{Con: mysqlDbCon}
 
+
 	var err error
-	mysqlDbCon, err = sql.Open("mysql", os.Getenv("DB_USER")+":"+os.Getenv("DB_PASSWORD")+"@127.0.0.1/my-db")
+	mysqlDbCon, err = sql.Open("mysql", os.Getenv("DB_USER")+":"+os.Getenv("DB_PASSWORD")+"@127.0.0.1:3306/my-db")
 	if err != nil {
 		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
 	}
